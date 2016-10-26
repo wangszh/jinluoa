@@ -1,0 +1,258 @@
+<extend name="Layout/ins_page" />
+<block name="content">
+	{:W('PageHeader/simple',array('name'=>'发布任务','search'=>'N'))}
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="executor" name="executor" value="">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="name">标题：</label>
+			<div class="col-sm-10">
+				<input class="form-control" type="text" id="name" name="name" value=""  check="require" msg="请输入标题">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="name">指派给：</label>
+			<div class="col-sm-10">
+				<div id="actor_wrap" class="inputbox">
+					<a class="pull-right btn btn-link text-center" onclick="popup_actor();"><i class="fa fa-user"></i> </a>
+					<div class="wrap" >
+						<span class="address_list"></span>
+						<span class="text" >
+							<input class="letter" type="text"  >
+						</span>
+					</div>
+					<div class="search dropdown ">
+						<ul class="dropdown-menu"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="expected_time">期望完成时间：</label>
+			<div class="col-sm-10">
+				<input class="form-control input-date-time" type="text" id="expected_time" name="expected_time" value="" readonly="readonly">
+			</div>
+		</div>
+		<volist name="field_list" id="vo">
+			{:W('UserDefineField/edit',array($vo))}
+		</volist>
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="content">任务说明：</label>
+			<div class="col-xs-10">
+				<textarea class="editor" id="content" name="content" style="width:100%;height:300px;" check="require" msg="请输入内容"></textarea>
+			</div>
+		</div>
+       
+        <script type="text/javascript" charset="utf-8" src="__INS__/js/jquery.min.js"></script>
+      
+        <script type="text/javascript" charset="utf-8" src="__INS__/js/cordova.js"></script> 
+
+        <!--
+        <div class="form-group col-sm-12" >
+
+        <div style="width: 98%;margin: 0 auto; text-align: center">
+            <a href="#" class=" ui-btn ui-btn-inline" onclick="capturePhotoUrl()">调用摄像头  </a>
+            <a href="#" class=" ui-btn ui-btn-inline" onclick="getPhoto1()">调用相册  </a>
+
+
+            <br>
+            <div id="urlinfo"></div>
+            <br>
+            <img style="display:none;" id="urlimage" src=""  width="90%" />
+
+            <a href="#" class=" ui-btn ui-btn-inline" onclick="uploadPhoto()" id="upbtn"  >上传  </a>
+
+            <div id="returninfo" style="display: none"> 上传数据</div>
+
+            <img id="returnpic" src="" width="90%" style="display: none">
+
+        </div>-->
+
+        
+		<!--
+		<div class="form-group">
+            <label class="col-sm-2 control-label" for="name">附件：</label>
+			<div class="col-sm-10">
+			<input id="_picFile" type="hidden" value="" name="_picFile"/>
+			<!-- take photoes -->
+			<!--<span><button onclick="capturePhoto();" >点击拍照</button></span>
+			
+			<span><button onclick="getPhoto(pictureSource.PHOTOLIBRARY);" >相册选择图片</button></span>-->
+			
+			<!--<img style="display: none; width: 120px; height: 120px;"
+				id="smallImage" src="" /> <img
+				style="display: none; width: 240px; height: 240px;" id="largeImage"
+				src="" />-->
+            
+			
+			<!--</div>
+		</div>
+	    <br>
+		<br>-->
+       <!--
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="name">附件：</label>
+			<div class="col-sm-10">
+				{:W('FileUpload/add')}
+				
+			</div>
+		</div>-->
+
+		<div class="form-group">
+		   <label class="col-sm-2 control-label" for="name">附件：</label>
+		  
+		  <!-- <p class="col-sm-10 col-sm-offset-2">
+    <input class="btn-sm btn-primary" type="button" value="拍照" onclick="loadImage();"/>
+    <img src="" id="getImage" name="getImage" style="display: none;width: 120px;height: 120px;"/>
+</p>-->
+
+<p class="col-sm-10 col-sm-offset-2">
+    <input class="btn-sm btn-primary" type="button" value="本地图片" onclick="loadImageLocal();"/>
+    <img src="" id="getImageLocal" style="display: none;width: 120px;height: 120px;"/>
+</p>
+
+<p class="col-sm-10 col-sm-offset-2">
+    <input class="btn-sm btn-primary" type="button" value="拍照上传" onclick="loadImageUpload();"/>
+    <!--<img src="" id="getImageUpload" style="display: none;width: 120px;height: 120px;"/>-->
+</p>
+        <!--<p><input type="file" name="img"></p>-->
+		<p><input type="hidden" id="pic" name="pic" value=''></p>
+
+		</div>
+
+		<div class="form-group">
+			<div class="action col-sm-10 col-sm-offset-2">
+				<input class="btn btn-sm btn-primary" type="button" value="保存" onclick="save();">
+				<input class="btn btn-sm btn-default" type="button" value="取消" onclick="go_return_url();">
+			</div>
+		</div>
+	</form>
+</block>
+<block name="js">
+	<script type="text/javascript">
+	     //alert(1111);
+		 
+           function loadImage() {
+			    //alert(4444);
+            //拍照并显示在屏幕
+            navigator.camera.getPicture(onLoadImageSuccess, onLoadImageFail, {destinationType: Camera.DestinationType.DATA_URL});
+           }
+          //拍照成功后回调
+        function onLoadImageSuccess(imageURI) {
+            //这里的图片经过了base64编码
+            var src = "data:image/jpeg;base64," + imageURI;
+            $("#getImage").attr("src", src);
+            $("#getImage").show();
+        }
+        //所有获取图片失败都回调此函数
+        function onLoadImageFail(message) {
+            navigator.notification.alert("拍照失败，原因：" + message, null, "警告");
+        }
+        /*  
+		  function loadImageLocal() {
+            //获取本地图片并显示在屏幕
+            navigator.camera.getPicture(onLoadImageLocalSuccess, onLoadImageFail, {
+                destinationType: Camera.DestinationType.FILE_URI,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            });
+        }
+		*/
+		 function loadImageLocal() {
+            //获取本地图片并显示在屏幕
+            navigator.camera.getPicture(onLoadImageUploadSuccess, onLoadImageFail, {
+                destinationType: Camera.DestinationType.FILE_URI,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            });
+        }
+        //本地图片选择成功后回调此函数
+        function onLoadImageLocalSuccess(imageURI) {
+            //var src = "data:image/jpeg;base64," + imageURI;
+            $("#getImageLocal").attr("src", imageURI);
+            $("#getImageLocal").show();
+        }
+
+		 //alert(22222);
+          function loadImageUpload() {
+            //拍照上传并显示在屏幕
+            navigator.camera.getPicture(onLoadImageUploadSuccess, onLoadImageFail, {
+                destinationType: Camera.DestinationType.FILE_URI
+            });
+        }
+        //图片拍照成功后回调此函数
+
+	
+		
+		// alert(33333);
+
+		  function onLoadImageUploadSuccess(imageURI) {
+            //此处执行文件上传的操作，上传成功后执行下面代码
+            var options = new FileUploadOptions(); //文件参数选项
+            options.fileKey = "file";//向服务端传递的file参数的parameter name
+            options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);//文件名
+            options.mimeType = "image/jpeg";//文件格式，默认为image/jpeg
+            //options.mimeType = "multipart/form-data";
+			options.chunkedMode = false;
+
+            var ft = new FileTransfer();//文件上传类
+            
+			ft.onprogress = function (progressEvt)  { //显示上传进度条
+				 if (progressEvt.lengthComputable) {
+                    navigator.notification.progressValue(Math.round(( progressEvt.loaded / progressEvt.total ) * 100));
+                }
+               
+            }
+
+            navigator.notification.progressStart("提醒", "当前上传进度");
+            ft.upload(imageURI, encodeURI('http://www.jinluoa.tk/index.php?m=&c=Task&a=tupian'), function () {
+                navigator.notification.progressStop();//停止进度条
+				//var src = "data:image/jpeg;base64," + imageURI;
+                //$("#getImageUpload").attr("src", imageURI);
+                //$("#getImageUpload").show();
+                navigator.notification.alert("文件上传成功！", null, "提醒");
+            }, null, options);
+
+			//alert(options.fileName);
+			$("#pic").val(options.fileName);
+
+         }
+
+   
+       
+		function save() {
+			window.onbeforeunload = null;
+			$("#executor").val("");
+			$("#actor_wrap span.address_list span").each(function() {
+				$("#executor").val($("#executor").val() + $(this).find("b").text() + '|' + $(this).attr("data") + ";");
+			});
+			$html = $("#executor").val();
+			var re = new RegExp("dept_", "g");
+			var arr = $html.match(re);
+			if (arr != null) {
+				$dept_count = arr.length;
+				$total_count = $html.split(';').length - 1;
+				if ($dept_count != $total_count) {
+					ui_error('部门和人员不能同时选择');
+					return false;
+				}
+			}
+			sendForm("form_data", "{:U('save')}");
+		}
+
+		function popup_actor() {
+			winopen("{:U('popup/task')}", 704, 574);
+		}
+
+		$(document).ready(function() {
+			$(document).on("click", ".inputbox .address_list a.del", function() {
+				$(this).parent().parent().remove();
+			});
+		});
+         
+        
+   
+    
+	</script>
+</block>

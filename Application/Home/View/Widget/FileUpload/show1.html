@@ -1,0 +1,32 @@
+<notempty name="file_list">
+	<volist name="file_list" id="file">
+		<p class="form-control-static">
+
+		<!--<div id="a1"></div>
+          <script type="text/javascript" src="__INS__/js/plugins/ckplayer/ckplayer.js" charset="utf-8"></script>
+          <script type="text/javascript">
+          var flashvars={
+                  f:'{:U('down?attach_id='.think_encrypt($file['id']))}',
+                  c:0,
+                  loaded:'loadedHandler'
+                  };
+          var video=['{:U('down?attach_id='.think_encrypt($file['id']))}->video/mp4'];
+          CKobject.embed('__INS__/js/plugins/ckplayer/ckplayer.swf','a1','ckplayer_a1',,'auto',false,flashvars,video);
+          </script>-->
+
+<video class="video" controls="controls" style="max-width:80%;" width="600" height="auto" autoplay="autoplay"> <source src="{:U('down?attach_id='.think_encrypt($file['id']))}" type="video/mp4"><source src="{:U('down?attach_id='.think_encrypt($file['id']))}" type="video/ogg" />您的浏览器不支持此种视频格式。</video> 
+
+<!--<video src="{:U('down?attach_id='.think_encrypt($file['id']))}" width="320" height="240" controls autobuffer></video>-->
+
+ <!--<video controls="controls" preload="preload" id="video" style="max-width:80%;" width="600" height="auto" autoplay="autoplay">
+      <source src="{:U('down?attach_id='.think_encrypt($file['id']))}" type="video/ogg" />
+      <source src="{:U('down?attach_id='.think_encrypt($file['id']))}" type="video/mp4" />
+      <source src="{:U('down?attach_id='.think_encrypt($file['id']))}" type="video/webm" />
+      <object data="{:U('down?attach_id='.think_encrypt($file['id']))}" width="100%" height="100%">
+        <embed width="100%" height="100%" src="./movie.swf" />
+      </object>
+      
+    </video>-->
+
+	</volist>
+</notempty>

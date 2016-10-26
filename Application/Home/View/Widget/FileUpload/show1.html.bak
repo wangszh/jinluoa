@@ -1,0 +1,31 @@
+<notempty name="file_list">
+	<volist name="file_list" id="file">
+		<p class="form-control-static">
+		
+<video controls="controls" style="max-width:80%;" height="auto"> <source src="{:U('down?attach_id='.think_encrypt($file['id']))}" >您的浏览器不支持此种视频格式。</video>    
+
+            
+
+			<!--<div class="video" id="CuPlayer" >
+
+			   //type="video/mp4"
+              <SCRIPT LANGUAGE=JavaScript>
+              <!--
+                  var vID        = "";
+                  var vWidth     = "100%";
+                  var vHeight    = "auto";
+                  //var vFile      = "CuSunV2set.xml";
+                  var vPlayer    = "__INS__"."/js/player.swf";
+                  //var vPic       = "images/start.jpg";
+                  //var vCssurl    = "images/mini.css";
+
+                 //PC,安卓,iOS
+                 var vMp4url    = "{:U('down?attach_id='.think_encrypt($file['id']))}";
+
+                  //
+                 </SCRIPT>
+                 <script class="CuPlayerVideo" data-mce-role="CuPlayerVideo" type="text/javascript" src="__INS__/js/CuSunX1.min.js"></script>
+</div>  -->
+		</p>
+	</volist>
+</notempty>
